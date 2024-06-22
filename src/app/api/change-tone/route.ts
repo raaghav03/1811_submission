@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    const prompt = `Rewrite the following text in a ${tone} tone. Maintain the original meaning and content, but adjust the language and style to match the requested tone:
+    const prompt = `Rewrite the following text in a ${tone} tone. Maintain the original meaning and content, but adjust the language and style to match the requested tone. be slightly neutral and deterministic.:
 
 Original text: "${text}"
 
