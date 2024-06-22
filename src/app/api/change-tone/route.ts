@@ -29,11 +29,3 @@ ${tone.charAt(0).toUpperCase() + tone.slice(1)} version:`;
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "1mb",
-    },
-  },
-};
