@@ -1,4 +1,5 @@
 "use client"
+import { Logo } from "./assets/icons"
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from "@/components/ui/textarea";
@@ -51,9 +52,16 @@ export default function ToneChanger() {
     setSelectedTone(value);
   };
   return (
+
+
     <div className="flex flex-col gap-4 h-screen justify-center items-center w-full">
-      <div className='w-fit flex flex-col gap-4 '>
-        <div className="flex flex-col gap-4 items-start">
+      <div className="items-start flex flex-col gap-4">
+        <div className="flex justify-center items-center gap-2 ">
+          <Logo />
+
+        </div>
+
+        <div className="flex flex-col gap-8 items-start">
           <Tabs defaultValue="funny" className="w-[400px]">
             <TabsList>
               <TabsTrigger value="funny" onClick={() => handleTabClick("funny")}>
@@ -90,6 +98,7 @@ export default function ToneChanger() {
             </Card>
           </div>
         )}
+
       </div>
     </div>
   );
