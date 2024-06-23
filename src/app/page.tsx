@@ -1,12 +1,21 @@
 "use client";
 import { useState } from "react";
+import { CornerDownLeft, Mic, Paperclip } from "lucide-react";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { Logo } from "../app/assets/icons"
+import { Logo } from "../app/assets/icons";
+import TemperatureControl from "@/components/tempcontrol"
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 
 type Tone = "persuasive" | "neutral" | "Professional" | "Casual";
 
@@ -37,6 +46,7 @@ export default function ToneChanger() {
       }
       const data = await response.json();
       setOutputText(data.modifiedText);
+      console.log(temperature)
     } catch (error) {
       console.error("Error changing tone:", error);
     } finally {
@@ -45,55 +55,44 @@ export default function ToneChanger() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex flex-row items-center  gap-2 mb-12">
-        <Logo />
+    <div className="  lg:py-16 lg:px-20 flex flex-col gap-8 p-4">
+      <div className="flex items-center w-full justify-between">
+        <div className="flex flex-row items-center gap-2 ">
+          <Logo />
+        </div>
+        <div className="text-gray-500 hover:underline text-xs md:text-lg">
+          <a href="mailto:raghavnagpal2003@gmail.com">built by raghav nagpal</a>
+        </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader>
+      <div className="grid lg:grid-cols-2 gap-8 grid-cols-1">
+        <Card className="h-[500px] ">
+          <CardHeader className="flex-col gap-4">
             <CardTitle>Input Text</CardTitle>
-          </CardHeader>̀
-          <CardContent>
-            <Textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Enter your text here"
-              className="min-h-[200px]"
-            />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Tone Controls</CardTitle>
-          </CardHeader>
-          <CardContent>
             <Tabs
               value={selectedTone}
               onValueChange={(value) => setSelectedTone(value as Tone)}
-              className="w-full"
+              
             >
               <TabsList>
-
                 <TabsTrigger value="neutral">Neutral</TabsTrigger>
                 <TabsTrigger value="persuasive">Persuasive</TabsTrigger>
                 <TabsTrigger value="Professional">Professional</TabsTrigger>
                 <TabsTrigger value="Casual">Casual</TabsTrigger>
               </TabsList>
             </Tabs>
-            <div className="mt-4">
-              <p>Temperature: {temperature.toFixed(2)}</p>
-              <Slider
-                defaultValue={[temperature * 100]}
-                max={100}
-                step={1}
-                onValueChange={(value) => setTemperature(value[0] / 100)}
-              />
-            </div>
+          </CardHeader>
+          ̀
+          <CardContent className=" justify-between h-[360px] flex flex-col gap-4 ">
+            <Textarea
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Enter your text here"
+              className="flex-grow "
+            />
             <Button
               onClick={handleToneChange}
               disabled={isLoading || !inputText || !selectedTone}
-              className="mt-4"
+              className="w-fit"
             >
               {isLoading ? (
                 <>
@@ -106,17 +105,23 @@ export default function ToneChanger() {
             </Button>
           </CardContent>
         </Card>
-        {outputText && (
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>Modified Text</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="whitespace-pre-wrap">{outputText}</p>
-            </CardContent>
-          </Card>
-        )}
+
+        <Card className="h-[500px] flex flex-col">
+          <CardHeader>
+            <CardTitle>Modified Text</CardTitle>
+          </CardHeader>
+          <CardContent className="flex-grow overflow-y-auto">
+            {outputText ? (
+              <p className="whitespace-pre-wrap text-xs md:text-sm lg:text-md">{outputText}</p>
+            ) : (
+              <p className="text-gray-400">
+                Input some text to start changing the tone
+              </p>
+            )}
+          </CardContent>
+        </Card>
       </div>
+      <TemperatureControl temperature={temperature} setTemperature={setTemperature} />
     </div>
   );
 }
