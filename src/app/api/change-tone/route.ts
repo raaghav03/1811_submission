@@ -6,17 +6,23 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, tone } = await req.json();
+    const { text, tone, temperature } = await req.json();
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    const prompt = `Rewrite the following text in a ${tone} tone. Maintain the original meaning and content, but adjust the language and style to match the requested tone. be slightly neutral and deterministic.:
+    const prompt = `Modify the following text to match a ${tone} tone. Preserve the original meaning and content while adjusting the language, style, and vocabulary to fit the requested tone. Ensure the rewritten text is coherent and natural in the new tone.
 
 Original text: "${text}"
 
 ${tone.charAt(0).toUpperCase() + tone.slice(1)} version:`;
 
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: temperature,
+      },
+    });
+
     const response = await result.response;
     const modifiedText = response.text();
 
